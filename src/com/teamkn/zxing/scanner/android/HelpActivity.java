@@ -17,9 +17,15 @@
 package com.teamkn.zxing.scanner.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebView;
@@ -109,6 +115,33 @@ public final class HelpActivity extends Activity {
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * We want the help screen to be shown automatically the first time a new version of the app is
+     * run. The easiest way to do this is to check android:versionCode from the manifest, and compare
+     * it to a value stored as a preference.
+     */
+    public static boolean showHelpOnFirstLaunch(Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(Scanner.PACKAGE_NAME, 0);
+            int currentVersion = info.versionCode;
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            int lastVersion = prefs.getInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN, 0);
+            if (currentVersion > lastVersion) {
+                prefs.edit().putInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN, currentVersion).commit();
+                Intent intent = new Intent(context, HelpActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                // Show the default page on a clean install, and the what's new page on an upgrade.
+                String page = lastVersion == 0 ? HelpActivity.DEFAULT_PAGE : HelpActivity.WHATS_NEW_PAGE;
+                intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY, page);
+                context.startActivity(intent);
+                return true;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.w(HelpActivity.class.getSimpleName(), e);
+        }
+        return false;
     }
 
     private final class HelpClient extends WebViewClient {

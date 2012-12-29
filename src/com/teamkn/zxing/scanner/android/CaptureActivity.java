@@ -20,8 +20,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -62,11 +60,9 @@ import java.util.*;
  */
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
-    private static final String TAG = CaptureActivity.class.getSimpleName();
+    public static final String TAG = CaptureActivity.class.getSimpleName();
 
     private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
-
-    private static final String PACKAGE_NAME = "com.teamkn.zxing.scanner.android";
 
     public static final int HISTORY_REQUEST_CODE = 0x0000bacc;
 
@@ -105,8 +101,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     }
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
 
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -120,7 +116,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-        showHelpOnFirstLaunch();
+        HelpActivity.showHelpOnFirstLaunch(this);
     }
 
     @Override
@@ -294,6 +290,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
     }
 
+
+
     private void decodeOrStoreSavedBitmap(Result result) {
         // Bitmap isn't used yet -- will be used soon
         if (handler == null) {
@@ -466,32 +464,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
     }
 
-    /**
-     * We want the help screen to be shown automatically the first time a new version of the app is
-     * run. The easiest way to do this is to check android:versionCode from the manifest, and compare
-     * it to a value stored as a preference.
-     */
-    private boolean showHelpOnFirstLaunch() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(PACKAGE_NAME, 0);
-            int currentVersion = info.versionCode;
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            int lastVersion = prefs.getInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN, 0);
-            if (currentVersion > lastVersion) {
-                prefs.edit().putInt(PreferencesActivity.KEY_HELP_VERSION_SHOWN, currentVersion).commit();
-                Intent intent = new Intent(this, HelpActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                // Show the default page on a clean install, and the what's new page on an upgrade.
-                String page = lastVersion == 0 ? HelpActivity.DEFAULT_PAGE : HelpActivity.WHATS_NEW_PAGE;
-                intent.putExtra(HelpActivity.REQUESTED_PAGE_KEY, page);
-                startActivity(intent);
-                return true;
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.w(TAG, e);
-        }
-        return false;
-    }
+
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         if (surfaceHolder == null) {
