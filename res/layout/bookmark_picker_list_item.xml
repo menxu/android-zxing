@@ -21,14 +21,16 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/half_padding">
 
-  <TextView android:id="@+id/bookmark_title"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"/>
+    <TextView
+        android:id="@+id/bookmark_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"/>
 
-  <TextView android:id="@+id/bookmark_url"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="false"/>
+    <TextView
+        android:id="@+id/bookmark_url"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="false"/>
 
 </LinearLayout>
