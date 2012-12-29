@@ -16,13 +16,11 @@
 
 package com.google.zxing.client.android.result;
 
-import com.google.zxing.Result;
+import android.app.Activity;
+import android.view.View;
 import com.google.zxing.client.android.R;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.ParsedResultType;
-
-import android.app.Activity;
-import android.view.View;
 
 /**
  * A base class for the Android-specific barcode handlers. These allow the app to polymorphically

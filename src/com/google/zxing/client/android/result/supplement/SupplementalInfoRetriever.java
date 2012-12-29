@@ -25,19 +25,16 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;
+import com.google.zxing.client.android.common.executor.AsyncTaskExecInterface;
+import com.google.zxing.client.android.common.executor.AsyncTaskExecManager;
+import com.google.zxing.client.android.history.HistoryManager;
+import com.google.zxing.client.result.ParsedResult;
+import com.google.zxing.client.result.URIParsedResult;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.zxing.client.android.common.executor.AsyncTaskExecInterface;
-import com.google.zxing.client.android.common.executor.AsyncTaskExecManager;
-import com.google.zxing.client.android.history.HistoryManager;
-import com.google.zxing.client.result.ISBNParsedResult;
-import com.google.zxing.client.result.ParsedResult;
-import com.google.zxing.client.result.ProductParsedResult;
-import com.google.zxing.client.result.URIParsedResult;
 
 public abstract class SupplementalInfoRetriever extends AsyncTask<Object,Object,Object> {
 
@@ -48,17 +45,8 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object,Object,
                                           HistoryManager historyManager,
                                           Context context) {
     AsyncTaskExecInterface taskExec = new AsyncTaskExecManager().build();
-    if (result instanceof URIParsedResult) {
-      taskExec.execute(new URIResultInfoRetriever(textView, (URIParsedResult) result, historyManager, context));
-      taskExec.execute(new TitleRetriever(textView, (URIParsedResult) result, historyManager));
-    } else if (result instanceof ProductParsedResult) {
-      String productID = ((ProductParsedResult) result).getProductID();
-      taskExec.execute(new ProductResultInfoRetriever(textView, productID, historyManager, context));
-    } else if (result instanceof ISBNParsedResult) {
-      String isbn = ((ISBNParsedResult) result).getISBN();
-      taskExec.execute(new ProductResultInfoRetriever(textView, isbn, historyManager, context));
-      taskExec.execute(new BookResultInfoRetriever(textView, isbn, historyManager, context));
-    }
+    taskExec.execute(new URIResultInfoRetriever(textView, (URIParsedResult) result, historyManager, context));
+    taskExec.execute(new TitleRetriever(textView, (URIParsedResult) result, historyManager));
   }
 
   private final WeakReference<TextView> textViewRef;
