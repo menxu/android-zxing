@@ -142,7 +142,7 @@ public final class Intents {
 
     /**
      * Prefix for keys that map to the values of {@link com.google.zxing.ResultMetadataType#BYTE_SEGMENTS},
-     * if available. The actual values will be set under a series of keys formed by adding 0, 1, 2, ...
+     * if available. The actual values will be under a series of keys formed by adding 0, 1, 2, ...
      * to this prefix. So the first byte segment is under key "SCAN_RESULT_BYTE_SEGMENTS_0" for example.
      * Call {@link android.content.Intent#getByteArrayExtra(String)} with these keys.
      */

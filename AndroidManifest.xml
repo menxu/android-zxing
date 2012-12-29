@@ -118,27 +118,7 @@
         <data android:mimeType="text/plain"/>
       </intent-filter>
     </activity>
-    <activity android:name=".book.SearchBookContentsActivity"
-              android:label="@string/sbc_name"
-              android:stateNotNeeded="true"
-              android:screenOrientation="landscape"
-              android:configChanges="orientation|keyboardHidden">
-      <intent-filter>
-        <action android:name="com.google.zxing.client.android.SEARCH_BOOK_CONTENTS"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-      </intent-filter>
-    </activity>
-    <activity android:name=".share.ShareActivity"
-              android:label="@string/share_name"
-              android:stateNotNeeded="true"
-              android:screenOrientation="user"
-              android:theme="@android:style/Theme.Light">
-      <intent-filter>
-        <action android:name="com.google.zxing.client.android.SHARE"/>
-        <category android:name="android.intent.category.DEFAULT"/>
-      </intent-filter>
-    </activity>
-    <activity android:name=".history.HistoryActivity"
+      <activity android:name=".history.HistoryActivity"
               android:label="@string/history_title"
               android:stateNotNeeded="true">
       <intent-filter>
